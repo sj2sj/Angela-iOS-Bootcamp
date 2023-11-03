@@ -14,18 +14,21 @@ protocol WeatherManagerDelegate {
   func didFailWithError(error: Error)
 }
 
+
 struct WeatherManager {
-  let weatherURL = "https://api.openweathermap.org/data/2.5/weather?units=metric&appid=2f8e68639c477301d8f0952ca79d13f7"
+  
+  let appId = Bundle.main.object(forInfoDictionaryKey: "WeatherAppID") as! String
+  let weatherURL = "https://api.openweathermap.org/data/2.5/weather?units=metric"
   
   var delegate: WeatherManagerDelegate?
   
   func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-    let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
+    let urlString = "\(weatherURL)&appId=\(appId)&lat=\(latitude)&lon=\(longitude)"
     performRequest(with: urlString)
   }
   
   func fetchWeather(cityName: String) {
-    let urlString = "\(weatherURL)&q=\(cityName)"
+    let urlString = "\(weatherURL)&appId=\(appId)&q=\(cityName)"
     performRequest(with: urlString)
   }
   
