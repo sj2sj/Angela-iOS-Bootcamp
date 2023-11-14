@@ -53,6 +53,8 @@ class ChatViewController: UIViewController {
               //UI조작 시 습관적으로 메인큐에서!!
               DispatchQueue.main.async {
                 self.tableView.reloadData()
+                let indexPath = IndexPath(row: self.messages.count-1, section: 0)
+                self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
               }
             }
           }
@@ -74,6 +76,7 @@ class ChatViewController: UIViewController {
           print("Firestore에 데이터를 저장하는 중 문제 발생, \(e)")
         } else {
           print("데이터 저장 성공")
+          self.messageTextfield.text = ""
         }
       }
     }
@@ -99,8 +102,26 @@ extension ChatViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let message = messages[indexPath.row]
+    
     let cell = tableView.dequeueReusableCell(withIdentifier: K.cellIdentifier, for: indexPath) as! MessageCell
-    cell.label?.text = messages[indexPath.row].body
+    cell.label?.text = message.body
+    
+    //현재 사용자 (나) 가 보낸 메세지?
+    if message.sender == Auth.auth().currentUser?.email {
+      cell.leftImageView.isHidden = true
+      cell.rightImageView.isHidden = false
+      cell.messageBubble.backgroundColor = UIColor(named: K.BrandColors.lightPurple)
+      cell.label.textColor = UIColor(named: K.BrandColors.purple)
+    } else { //다른 사용자가 보낸 메시지
+      cell.leftImageView.isHidden = false
+      cell.rightImageView.isHidden = true
+      cell.messageBubble.backgroundColor = UIColor(named: K.BrandColors.purple)
+      cell.label.textColor = UIColor(named: K.BrandColors.lightPurple)
+    }
+    
+    
+    
     return cell
   }
   
