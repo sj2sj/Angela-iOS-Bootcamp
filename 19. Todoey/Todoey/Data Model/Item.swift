@@ -2,13 +2,15 @@
 //  Item.swift
 //  Todoey
 //
-//  Created by 뜌딩 on 2023/11/30.
+//  Created by 뜌딩 on 12/12/23.
 //  Copyright © 2023 App Brewery. All rights reserved.
 //
 
 import Foundation
+import RealmSwift
 
-class Item: Codable {
-  var title: String = ""
-  var done: Bool = false
+class Item: Object {
+  @Persisted var title: String = ""
+  @Persisted var done: Bool = false
+  @Persisted(originProperty: "items") var parentCategory: LinkingObjects<Category>
 }

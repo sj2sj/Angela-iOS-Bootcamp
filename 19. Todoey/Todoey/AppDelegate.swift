@@ -8,16 +8,26 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+  var window: UIWindow?
+
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-      print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
+      print(Realm.Configuration.defaultConfiguration.fileURL)
+      print("version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
+      
+      do {
+        let configuration = Realm.Configuration(schemaVersion:2)
+        let realm = try Realm(configuration: configuration)
+      } catch {
+        print("Error initialising new Realm, \(error)")
+      }
       
       return true
     }
